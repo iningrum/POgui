@@ -1,12 +1,11 @@
+#include "dimensions.h"
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include "primlib.h"
-
 static SDL_Renderer *renderer = NULL;
 static SDL_Window *window = NULL;
 
@@ -21,8 +20,8 @@ static struct RGB colors[COLOR_MAX] = {
     {0, 255, 255}, {255, 0, 255}, {255, 255, 0}, {255, 255, 255}};
 
 // Screen dimension constants
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = MAX_W;//800;
+const int SCREEN_HEIGHT = MAX_H;//600;
 
 void gfx_pixel(int x, int y, enum color c) {
   pixelRGBA(renderer, x, y, colors[c].r, colors[c].g, colors[c].b, 255);
