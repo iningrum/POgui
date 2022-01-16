@@ -54,10 +54,8 @@ int main(int argc, char *argv[])
   d.insert(pW6);
   d.insert(pW7);
   d.insert(pW8);
-  d.insert(pG);
-
   d.insert(pClock);
-
+  d.insert(pG); 
   d.run();
 
   return 0;

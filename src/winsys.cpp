@@ -13,16 +13,16 @@ using namespace std;
 bool CView::handleEvent(int key) {
   switch (key) {
   case SDLK_UP:
-    move(CPoint(0, -10));
+    //move(CPoint(0, -10));
     return true;
   case SDLK_DOWN:
-    move(CPoint(0, 10));
+    //move(CPoint(0, 10));
     return true;
   case SDLK_RIGHT:
-    move(CPoint(10, 0));
+    //move(CPoint(10, 0));
     return true;
   case SDLK_LEFT:
-    move(CPoint(-10, 0));
+    //move(CPoint(-10, 0));
     return true;
   };
   return false;
@@ -44,10 +44,10 @@ bool CWindow::handleEvent(int key) {
 
   switch (key) {
   case SDLK_EQUALS:
-    geom.size += CPoint(10, 10);
+    //geom.size += CPoint(10, 10);
     return true;
   case SDLK_MINUS:
-    geom.size -= CPoint(10, 10);
+    //geom.size -= CPoint(10, 10);
     return true;
   };
 
@@ -151,7 +151,7 @@ bool CDesktop::handleEvent(int key) {
   if (!children.empty() && children.back()->handleEvent(key))
     return true;
 
-  if (key == SDLK_TAB) {
+  if (key == SDLK_TAB and 0) {
     if (!children.empty()) {
       children.push_front(children.back());
       children.pop_back();
