@@ -16,3 +16,18 @@ We def need multithreading but idk how for now.
 3. Replay/Simulate recording
 4. Multithreading with support for dynamic (de)allocation of sensors
 5. It's supposed to run as a server so runtime support for hardware changes is required
+
+## csv output
+
+Assumed output for csv is:
+	",".join([measure(s) for s in sensors])
+First line is timestamp for each measurement
+
+so exemplary file is:
+```csv
+time,21:00:20,21:00:40,21:01:00
+temperature1,20,13,14,15
+humidity2_460,14,56,45,76
+```
+
+Python script to convert into more excel-like will be provided
