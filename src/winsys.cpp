@@ -83,7 +83,8 @@ bool CInputLine::handleEvent(int c) {
       return true;
     };
   }
-
+  else if (c == SDLK_KP_ENTER)
+      end = true;
   if ((c > 255) || (c < 0))
     return false;
   if (!isalnum(c) && (c != ' '))
@@ -150,7 +151,6 @@ void CDesktop::paint() {
 bool CDesktop::handleEvent(int key) {
   if (!children.empty() && children.back()->handleEvent(key))
     return true;
-
   if (key == SDLK_TAB and 0) {
     if (!children.empty()) {
       children.push_front(children.back());

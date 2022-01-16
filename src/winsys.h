@@ -50,8 +50,10 @@ public:
 
 class CInputLine : public CFramedWindow
 {
-  string text;
+  
 public:
+  string text;
+  bool end = false;
   CInputLine(CRect r, color wc = DWC, color fc = DFC) : CFramedWindow(r, wc, fc) {}
 
   void paint();
