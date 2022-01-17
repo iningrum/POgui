@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include "winsys.h"
 #include "clock.h"
+#include "graph.h"
 int main(int argc, char *argv[])
 {
   if (gfx_init())
@@ -45,17 +46,22 @@ int main(int argc, char *argv[])
   CClock* pClock = new CClock(wClock, GREEN, BLACK);
 
   CDesktop d;
-
-  d.insert(pW1);
-  d.insert(pW2);
-  d.insert(pW3);
-  d.insert(pW4);
-  d.insert(pW5);
-  d.insert(pW6);
-  d.insert(pW7);
-  d.insert(pW8);
-  d.insert(pClock);
-  d.insert(pG); 
+  CSensorGraph* graph = new CSensorGraph(ww2);
+  graph->values.push_back(std::make_pair(20,1.15));
+  graph->values.push_back(std::make_pair(40,2.15));
+  graph->values.push_back(std::make_pair(60,5.15));
+  graph->values.push_back(std::make_pair(90,1.15));
+  d.insert(graph);
+  //d.insert(pW1);
+  //d.insert(pW2);
+  //d.insert(pW3);
+  //d.insert(pW4);
+  //d.insert(pW5);
+  //d.insert(pW6);
+  //d.insert(pW7);
+  //d.insert(pW8);
+  //d.insert(pClock);
+  //d.insert(pG); 
   d.run();
   return 0;
 }
