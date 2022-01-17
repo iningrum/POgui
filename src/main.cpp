@@ -57,6 +57,5 @@ int main(int argc, char *argv[])
   d.insert(pClock);
   d.insert(pG); 
   d.run();
-
   return 0;
 }
