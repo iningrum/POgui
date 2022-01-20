@@ -12,13 +12,11 @@
 class CSensorGraph : public CFramedWindow{
     public:
     CSensorGraph(CRect r, color wc = DWC, color fc = DFC) : CFramedWindow(r, wc, fc) {}
-    std::list<int> X;
-    std::list<int> Y;
+    std::list<float> X;
+    std::list<float> Y;
     void paint()
     {
-        gfx_wline(0,100,50,140,BLACK,5);
-        gfx_wline(50,140,200.5,200,BLACK,5);
-        //CFramedWindow::paint();
+        CFramedWindow::paint();
         auto xs = X.begin();
         auto ys = Y.begin();
         auto next = Y.begin()++;
@@ -30,7 +28,7 @@ class CSensorGraph : public CFramedWindow{
             ys++;
             int Xb = *xs;
             int Yb = *ys;
-            gfx_wline(Xa,Ya,Xb,Yb,BLACK,5);
+            gfx_wline(Xa,Ya,Xb,Yb,WHITE,5);
             xs++;
             ys++;
         }

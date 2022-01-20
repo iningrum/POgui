@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
   CClock* pClock = new CClock(wClock, GREEN, BLACK);
 
   CDesktop d;
-  CSensorGraph* graph = new CSensorGraph(ww2);
+  CSensorGraph* graph = new CSensorGraph(ww1);
   graph->X.push_back(10);
   graph->Y.push_back(100);
   graph->X.push_back(60);
