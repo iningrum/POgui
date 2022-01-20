@@ -47,10 +47,13 @@ int main(int argc, char *argv[])
 
   CDesktop d;
   CSensorGraph* graph = new CSensorGraph(ww2);
-  graph->values.push_back(std::make_pair(20,1.15));
-  graph->values.push_back(std::make_pair(40,2.15));
-  graph->values.push_back(std::make_pair(60,5.15));
-  graph->values.push_back(std::make_pair(90,1.15));
+  graph->X.push_back(10);
+  graph->Y.push_back(100);
+  graph->X.push_back(60);
+  graph->Y.push_back(130);
+  //graph->values.push_back(100);
+  //graph->values.push_back(200);
+
   d.insert(graph);
   //d.insert(pW1);
   //d.insert(pW2);
