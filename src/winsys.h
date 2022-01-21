@@ -15,9 +15,10 @@ using namespace std;
 class CView
 {
 public:
+  std::string str;
   CView() {}
   virtual ~CView() {}
-
+  virtual void push_back(float item) {}
   virtual void paint () = 0;
   virtual bool handleEvent (int key);
   virtual void move (const CPoint & delta) = 0;

@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include "rand.h"
+#include "../config.h"
 using string = std::string;
 using namespace std;
 enum CSensorType
@@ -29,6 +30,7 @@ private:
         }
 
 public:
+    int id = 0;
     //static CSensor *Make(CSensorType type, float min, float max);
     friend ostream& operator <<(ostream& os,const CSensor<T>& obj)
     {
@@ -38,9 +40,11 @@ public:
     CSensor(T lowLimit, T highLimit) : lowLimit(lowLimit),
                                                highLimit(highLimit)
     {
+        this->id = ID;
+        ID++;
     }
     CSensor() {}
-    float getMeasurement() const
+    T getMeasurement() const
     {
         return makeMeasurement();
     }
@@ -55,7 +59,7 @@ public:
     CTemperatureSensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit) {}
     string getName() const
     {
-        return "Current temperature:\t";
+        return "Temperature sensor  "+to_string(this->id);
     }
     string getUnit() const
     {
@@ -69,7 +73,7 @@ public:
     CHumiditySensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit) {}
     string getName() const
     {
-        return "Current humidity:\t";
+        return "Humidity sensor  "+to_string(this->id);
     }
     string getUnit() const
     {
@@ -83,7 +87,7 @@ public:
     CWindSensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit) {}
     string getName() const
     {
-        return "Current wind speed:\t";
+        return "Wind sensor  "+to_string(this->id);
     }
     string getUnit() const
     {
@@ -97,7 +101,7 @@ public:
     CPressureSensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit) {}
     string getName() const
     {
-        return "Current air pressure:\t";
+        return "Pressure sensor  "+to_string(this->id);
     }
     string getUnit() const
     {
@@ -111,7 +115,7 @@ public:
     CInsolationSensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit) {}
     string getName() const
     {
-        return "Current insolation:\t";
+        return "Insolation sensor  "+to_string(this->id);
     }
     string getUnit() const
     {

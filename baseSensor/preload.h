@@ -1,3 +1,4 @@
+#pragma once
 #define TYPE float
 #include "sensor.h"
 #include "base.h"
@@ -47,15 +48,25 @@ const CSensor<TYPE>* MakeSensor(std::string line)
     }
     
 }
-CBase<TYPE>* LoadMachineState()
+const CBase<TYPE>* LoadMachineState()
 { // return vector of sensors
-    std::ifstream file("machineState.csv");
+    /*std::ifstream file("machineState.csv");
     std::vector<const CSensor<TYPE>*> result;
     std::string line;
     while(std::getline(file,line))
     {
-        //std::cout << line << std::endl;
+        std::cout <<"aaa   " <<line << std::endl;
         result.push_back(MakeSensor(line));
     }
-    return new CBase<TYPE>(result.begin(),result.end());
+    std::cout << "\n-->=> " << result.size() << std::endl;*/
+    std::vector<const CSensor<TYPE>*> result;
+    result.push_back(new CTemperatureSensor<float>(10,40));
+    result.push_back(new CTemperatureSensor<float>(-60,40));
+    result.push_back(new CTemperatureSensor<float>(100,200));
+    result.push_back(new CTemperatureSensor<float>(-600,400));
+    result.push_back(new CTemperatureSensor<float>(150,450));
+    result.push_back(new CTemperatureSensor<float>(130,400));
+    result.push_back(new CTemperatureSensor<float>(10,40));
+    result.push_back(new CTemperatureSensor<float>(0,80));
+    return new CBase<TYPE>(result);
 }

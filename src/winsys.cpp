@@ -1,10 +1,13 @@
 #include "cpoint.h"
 #include "winsys.h"
-
+#include <time.h>
+#include <string>
 #include <ctype.h>
 #include <list>
 #include <stdarg.h>
 #include <string>
+#include "../baseSensor/preload.h"
+#include "../config.h"
 using namespace std;
 
 //----------------------------------------------------------------------
@@ -168,7 +171,15 @@ SDL_Event CDesktop::getEvent() {
 void CDesktop::run() {
   paint();
   gfx_updateScreen();
+  int frequency = 5;
+  time_t expected_time = time(0)+5;
 
+  auto sensors = LoadMachineState();
+  //exit(0);
+  std::cout<<"\n\n\n\t--->>> "<< sensors->Sensors.size() << std::endl;
+      std::vector<const CSensor<TYPE>*>::const_iterator sensor_slice_a = sensors->Sensors.begin();
+      std::vector<const CSensor<TYPE>*>::const_iterator sensor_slice_b = sensors->Sensors.begin()+8; 
+  auto desktop_slice_a = this->children.begin();
   while (1) {
     bool updateNeeded = false;
     SDL_Event event = getEvent();
@@ -188,6 +199,22 @@ void CDesktop::run() {
     if(updateNeeded) {
       paint();
       gfx_updateScreen();
+    }
+    if (time(0) == expected_time)
+    {
+      expected_time+=5;
+      std::cout << sensors;
+      int i = 0;
+      auto desktop_it = desktop_slice_a;
+      for (auto it = sensor_slice_a; it!=sensor_slice_b;it++)
+      {
+          (*it)->getMeasurement();
+          //std::string name = (*it)->getName();
+          (*desktop_it)->str = (*it)->getName();
+          (*desktop_it)->push_back((*it)->getMeasurement());
+          desktop_it++;
+
+      }
     }
   }
 }

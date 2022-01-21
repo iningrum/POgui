@@ -22,9 +22,9 @@ class CBase
 {
 public:
     std::vector<const CSensor<T>*> Sensors;
-    CBase<T>(std::vector<const CSensor<T>*>::const_iterator begin, std::vector<const CSensor<T>*>::const_iterator end)
+    CBase<T>(std::vector<const CSensor<T>*> vec)
     {
-        this->Sensors(begin,end);
+        this->Sensors = vec;
     }
     CBase<T>(int val){Sensors.reserve(val);}
     friend ostream& operator <<(ostream& os,const CBase<T>& obj)
