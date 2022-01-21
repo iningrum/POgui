@@ -6,6 +6,7 @@
 #include <list>
 #include <stdarg.h>
 #include <string>
+#include "parse.h"
 #include "../baseSensor/preload.h"
 #include "../config.h"
 using namespace std;
@@ -13,8 +14,10 @@ using namespace std;
 //----------------------------------------------------------------------
 // CView methods
 
-bool CView::handleEvent(int key) {
-  switch (key) {
+bool CView::handleEvent(int key)
+{
+  switch (key)
+  {
   case SDLK_UP:
     //move(CPoint(0, -10));
     return true;
@@ -31,21 +34,23 @@ bool CView::handleEvent(int key) {
   return false;
 }
 
-
 //----------------------------------------------------------------------
 // CWindow methods
 
-void CWindow::paint() {
+void CWindow::paint()
+{
   gfx_filledRect(geom.topleft.x, geom.topleft.y,
                  geom.topleft.x + geom.size.x - 1,
                  geom.topleft.y + geom.size.y - 1, wc);
 }
 
-bool CWindow::handleEvent(int key) {
+bool CWindow::handleEvent(int key)
+{
   if (CView::handleEvent(key))
     return true;
 
-  switch (key) {
+  switch (key)
+  {
   case SDLK_EQUALS:
     //geom.size += CPoint(10, 10);
     return true;
@@ -62,7 +67,8 @@ void CWindow::move(const CPoint &delta) { geom.topleft += delta; }
 //----------------------------------------------------------------------
 // CFramedWindow methods
 
-void CFramedWindow::paint() {
+void CFramedWindow::paint()
+{
   CWindow::paint();
   gfx_rect(geom.topleft.x, geom.topleft.y, geom.topleft.x + geom.size.x - 1,
            geom.topleft.y + geom.size.y - 1, fc);
@@ -71,23 +77,31 @@ void CFramedWindow::paint() {
 //----------------------------------------------------------------------
 // CInputLine methods
 
-void CInputLine::paint() {
+void CInputLine::paint()
+{
   CFramedWindow::paint();
   gfx_textout(geom.topleft.x, geom.topleft.y, text.c_str(), RED);
 }
 
-bool CInputLine::handleEvent(int c) {
+bool CInputLine::handleEvent(int c)
+{
   if (CFramedWindow::handleEvent(c))
     return true;
 
-  if (c == SDLK_BACKSPACE) {
-    if (text.length() > 0) {
+  if (c == SDLK_BACKSPACE)
+  {
+    if (text.length() > 0)
+    {
       text.erase(text.length() - 1);
       return true;
     };
   }
-  else if (c == SDLK_KP_ENTER)
-      end = true;
+  else if (c == SDLK_0)
+  {
+    //int code = parseCommand(text);
+    text = "\numbasa";
+    return true;
+  }
   if ((c > 255) || (c < 0))
     return false;
   if (!isalnum(c) && (c != ' '))
@@ -99,27 +113,33 @@ bool CInputLine::handleEvent(int c) {
 //----------------------------------------------------------------------
 // CGroup methods
 
-void CGroup::paint() {
+void CGroup::paint()
+{
   for (list<CView *>::iterator i = children.begin(); i != children.end(); i++)
     (*i)->paint();
 }
 
-bool CGroup::handleEvent(int key) {
+bool CGroup::handleEvent(int key)
+{
   if (CView::handleEvent(key))
     return true;
 
   if (!children.empty() && children.back()->handleEvent(key))
     return true;
 
-  if (key == SDLK_PAGEUP) {
-    if (!children.empty()) {
+  if (key == SDLK_PAGEUP)
+  {
+    if (!children.empty())
+    {
       children.push_front(children.back());
       children.pop_back();
     }
     return true;
   }
-  else if (key == SDLK_PAGEDOWN) {
-    if (!children.empty()) {
+  else if (key == SDLK_PAGEDOWN)
+  {
+    if (!children.empty())
+    {
       children.push_back(children.front());
       children.pop_front();
     }
@@ -129,7 +149,8 @@ bool CGroup::handleEvent(int key) {
   return false;
 }
 
-void CGroup::move(const CPoint &delta) {
+void CGroup::move(const CPoint &delta)
+{
 
   for (list<CView *>::iterator i = children.begin(); i != children.end(); i++)
     (*i)->move(delta);
@@ -137,7 +158,8 @@ void CGroup::move(const CPoint &delta) {
 
 void CGroup::insert(CView *v) { children.push_back(v); }
 
-CGroup::~CGroup() {
+CGroup::~CGroup()
+{
   for (list<CView *>::iterator i = children.begin(); i != children.end(); i++)
     delete (*i);
 }
@@ -145,17 +167,21 @@ CGroup::~CGroup() {
 //----------------------------------------------------------------------
 // CDesktop methods
 
-void CDesktop::paint() {
+void CDesktop::paint()
+{
   gfx_filledRect(0, 0, gfx_screenWidth() - 1, gfx_screenHeight() - 1, DBC);
 
   CGroup::paint();
 }
 
-bool CDesktop::handleEvent(int key) {
+bool CDesktop::handleEvent(int key)
+{
   if (!children.empty() && children.back()->handleEvent(key))
     return true;
-  if (key == SDLK_TAB and 0) {
-    if (!children.empty()) {
+  if (key == SDLK_TAB and 0)
+  {
+    if (!children.empty())
+    {
       children.push_front(children.back());
       children.pop_back();
     };
@@ -164,56 +190,75 @@ bool CDesktop::handleEvent(int key) {
   return false;
 }
 
-SDL_Event CDesktop::getEvent() {
+SDL_Event CDesktop::getEvent()
+{
   return gfx_getEvent();
 }
 
-void CDesktop::run() {
+void CDesktop::run()
+{
   paint();
   gfx_updateScreen();
   int frequency = 5;
-  time_t expected_time = time(0)+5;
+  time_t expected_time = time(0) + 5;
 
   auto sensors = LoadMachineState();
   //exit(0);
-  std::cout<<"\n\n\n\t--->>> "<< sensors->Sensors.size() << std::endl;
-      std::vector<const CSensor<TYPE>*>::const_iterator sensor_slice_a = sensors->Sensors.begin();
-      std::vector<const CSensor<TYPE>*>::const_iterator sensor_slice_b = sensors->Sensors.begin()+8; 
+  std::cout << "\n\n\n\t--->>> " << sensors->Sensors.size() << std::endl;
+  std::vector<const CSensor<TYPE> *>::const_iterator sensor_slice_a = sensors->Sensors.begin();
+  std::vector<const CSensor<TYPE> *>::const_iterator sensor_slice_b = sensor_slice_a + 8;
   auto desktop_slice_a = this->children.begin();
-  while (1) {
+  while (1)
+  {
     bool updateNeeded = false;
     SDL_Event event = getEvent();
 
-    if(event.type == SDL_QUIT)
+    if (event.type == SDL_QUIT)
       exit(3);
-    else if(event.type == SDL_USEREVENT)
+    else if (event.type == SDL_USEREVENT)
       updateNeeded = true;
-    else if(event.type == SDL_KEYDOWN)
+    else if (event.type == SDL_KEYDOWN)
     {
       int c = event.key.keysym.sym;
+      if (c == SDLK_RIGHT)
+      {
+        if (sensor_slice_b == sensors->Sensors.end())
+          sensor_slice_a = sensors->Sensors.begin();
+        else
+          sensor_slice_a += 8;
+        sensor_slice_b = sensor_slice_a + 8;
+      }
+      if (c == SDLK_LEFT)
+      {
+        if (sensor_slice_a == sensors->Sensors.begin())
+          sensor_slice_a = sensors->Sensors.end() - 8;
+        else
+          sensor_slice_a -= 8;
+        sensor_slice_b = sensor_slice_a + 8;
+      }
       if (c == 'q')
         break;
       updateNeeded = handleEvent(c);
     }
 
-    if(updateNeeded) {
+    if (updateNeeded)
+    {
       paint();
       gfx_updateScreen();
     }
     if (time(0) == expected_time)
     {
-      expected_time+=5;
+      expected_time += 5;
       std::cout << sensors;
       int i = 0;
       auto desktop_it = desktop_slice_a;
-      for (auto it = sensor_slice_a; it!=sensor_slice_b;it++)
+      for (auto it = sensor_slice_a; it != sensor_slice_b; it++)
       {
-          (*it)->getMeasurement();
-          //std::string name = (*it)->getName();
-          (*desktop_it)->str = (*it)->getName();
-          (*desktop_it)->push_back((*it)->getMeasurement());
-          desktop_it++;
-
+        (*it)->getMeasurement();
+        //std::string name = (*it)->getName();
+        (*desktop_it)->str = (*it)->getName();
+        (*desktop_it)->push_back((*it)->getMeasurement());
+        desktop_it++;
       }
     }
   }

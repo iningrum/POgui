@@ -3,54 +3,52 @@
 #include "sensor.h"
 #include "base.h"
 #include <iostream>
+#include <map>
 #include <array>
 #include <vector>
 #include <fstream>
 #include <string>
-const CSensor<TYPE>* MakeSensor(std::string line)
+const CSensor<TYPE> *MakeSensor(std::string line)
 {
-    std::array<std::string,3> params;
-    { // preparse
-        std::string temp;
-        unsigned int i = 0;
-        for( auto c:line)
-        {
-            if (c==',')
-            {
-                params.at(i) = temp;
-                temp.clear();
-                i++;
-            }
-            else temp+=c;
-        }
-        if (i==2)
-        {
-            params.at(i) = temp;
-            temp.clear();
-            i++;
-        }
+    using str = std::string;
+
+    //line = strip(line);
+    std::vector<std::string> command = split(line, ',');
+    std::map<str, CSensorType> possible_types;
+    str &type = command.at(0);
+    str &min = command.at(1);
+    str &max = command.at(2);
+    std::cout << "\ntype\t" << type<<"\n";
+    possible_types["temperature"] = Temperature_e;
+    possible_types["humidity"] = Humidity_e;
+    possible_types["wind"] = Wind_e;
+    possible_types["pressure"] = Pressure_e;
+    possible_types["insolation"] = Insolation_e;
+    CSensorType t;
+    { // get type
+        auto where = possible_types.find(type);
+        t = (where != possible_types.end()) ? where->second : NonExistant_e;
     }
-    { // return
-        std::string& type = params[0];
-        float min = stof(params[1]);
-        float max = stof(params[2]);
-        if (type=="temperature")
-            return new const CTemperatureSensor<TYPE>(min,max);
-        else if(type=="humidity")
-            return new const CHumiditySensor<TYPE>(min,max);
-        else if(type=="wind")
-            return new const CWindSensor<TYPE>(min,max);
-        else if(type=="pressure")
-            return new const CPressureSensor<TYPE>(min,max);
-        else if(type=="insolation")
-            return new const CInsolationSensor<TYPE>(min,max);
-        else throw 1;
+    switch (t)
+    {
+    case Temperature_e:
+        return new CTemperatureSensor<TYPE>(stof(min), stof(max));
+    case Humidity_e:
+        return new CHumiditySensor<TYPE>(stof(min), stof(max));
+    case Wind_e:
+        return new CWindSensor<TYPE>(stof(min), stof(max));
+    case Pressure_e:
+        return new CPressureSensor<TYPE>(stof(min), stof(max));
+    case Insolation_e:
+        return new CInsolationSensor<TYPE>(stof(min), stof(max));
+    case NonExistant_e:
+        return nullptr;
     }
-    
+    return nullptr;
 }
-const CBase<TYPE>* LoadMachineState()
+const CBase<TYPE> *LoadMachineState()
 { // return vector of sensors
-    /*std::ifstream file("machineState.csv");
+    std::ifstream file("baseSensor/machineState.csv");
     std::vector<const CSensor<TYPE>*> result;
     std::string line;
     while(std::getline(file,line))
@@ -58,15 +56,7 @@ const CBase<TYPE>* LoadMachineState()
         std::cout <<"aaa   " <<line << std::endl;
         result.push_back(MakeSensor(line));
     }
-    std::cout << "\n-->=> " << result.size() << std::endl;*/
-    std::vector<const CSensor<TYPE>*> result;
-    result.push_back(new CTemperatureSensor<float>(10,40));
-    result.push_back(new CTemperatureSensor<float>(-60,40));
-    result.push_back(new CTemperatureSensor<float>(100,200));
-    result.push_back(new CTemperatureSensor<float>(-600,400));
-    result.push_back(new CTemperatureSensor<float>(150,450));
-    result.push_back(new CTemperatureSensor<float>(130,400));
-    result.push_back(new CTemperatureSensor<float>(10,40));
-    result.push_back(new CTemperatureSensor<float>(0,80));
+    for (int i =0; i<(result.size()+8)%8;i++)
+        result.push_back(new CNonexistantSensor<TYPE>(0,0));
     return new CBase<TYPE>(result);
 }
