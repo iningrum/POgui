@@ -199,8 +199,8 @@ void CDesktop::run()
 {
   paint();
   gfx_updateScreen();
-  int frequency = 5;
-  time_t expected_time = time(0) + 5;
+  int frequency = FREQ;
+  time_t expected_time = time(0) + frequency;
 
   auto sensors = LoadMachineState();
   //exit(0);
@@ -227,6 +227,15 @@ void CDesktop::run()
         else
           sensor_slice_a += 8;
         sensor_slice_b = sensor_slice_a + 8;
+        for (int i = 0; i < 8; i++)
+        {
+          auto start = this->children.begin();
+          for (int i = 0; i < 8; i++)
+          {
+            (*start)->flush();
+            start++;
+          }
+        }
       }
       if (c == SDLK_LEFT)
       {
@@ -235,6 +244,15 @@ void CDesktop::run()
         else
           sensor_slice_a -= 8;
         sensor_slice_b = sensor_slice_a + 8;
+        for (int i = 0; i < 8; i++)
+        {
+          auto start = this->children.begin();
+          for (int i = 0; i < 8; i++)
+          {
+            (*start)->flush();
+            start++;
+          }
+        }
       }
       if (c == 'q')
         break;
@@ -248,7 +266,7 @@ void CDesktop::run()
     }
     if (time(0) == expected_time)
     {
-      expected_time += 5;
+      expected_time += frequency;
       std::cout << sensors;
       int i = 0;
       auto desktop_it = desktop_slice_a;

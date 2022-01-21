@@ -19,6 +19,7 @@ public:
   CView() {}
   virtual ~CView() {}
   virtual void push_back(float item) {}
+  virtual void flush(){}
   virtual void paint () = 0;
   virtual bool handleEvent (int key);
   virtual void move (const CPoint & delta) = 0;

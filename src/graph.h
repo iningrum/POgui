@@ -24,6 +24,14 @@ public:
     std::pair<float, float> multipliers;
     std::pair<float, float> specialPoint;
     std::pair<float, float> shift;
+    void flush()
+    {
+        for(auto &v:Y)
+        {
+            v=0;
+        }
+        this->str = "Loading...";
+    }
     CSensorGraph(CRect r,float x,float y,float min, float max, color wc = DWC, color fc = DFC) : CFramedWindow(r, wc, fc)
     {
         minV = min;
@@ -39,7 +47,7 @@ public:
     {
         Y.erase(Y.begin());
         Y.push_back(val*multipliers.second);
-        float& v = *Y.end();
+        //float& v = *Y.end();
         
     }
     void scaleY()
@@ -63,8 +71,8 @@ public:
             specialPoint = std::make_pair(xval, yval);
         }
         { // establish shift
-            float min = *std::min_element(Y.begin(), Y.end());
-            float max = *std::max_element(Y.begin(), Y.end());
+            //float min = *std::min_element(Y.begin(), Y.end());
+            //float max = *std::max_element(Y.begin(), Y.end());
             float yval = specialPoint.second;
             float xval = (X[0] - specialPoint.first);
             shift = std::make_pair(xval, yval);
@@ -117,7 +125,7 @@ public:
     {
         CFramedWindow::paint();
         gfx_textout(real_topleft.first*1.01,real_topleft.second+geom.size.y*0.01,this->str.c_str(),GREEN);
-        float &ymul = multipliers.second;
+        //float &ymul = multipliers.second;
         auto data = this->Transp();
         auto xx = data.first;
         auto yy = data.second;

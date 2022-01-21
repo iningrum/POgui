@@ -36,15 +36,15 @@ int main(int argc, char *argv[])
   CRect wClock(CPoint(200,200), CPoint(MAX_W/8,MAX_W/8));
   wClock.Move(MAX_W-(MAX_W/8)-205,MAX_H-MAX_W/8);
   
-  CWindow *pW1 = new CSensorGraph(ww1,v[0].first,v[0].second,100,200);
-  CFramedWindow* pW2 = new CSensorGraph(ww2,v[1].first,v[1].second,100,200);
+  CWindow *pW1 = new CSensorGraph(ww1,v[0].first,v[0].second,-100,200);
+  CFramedWindow* pW2 = new CSensorGraph(ww2,v[1].first,v[1].second,-100,200);
 
-  CFramedWindow* pW3 = new CSensorGraph(ww3,v[2].first,v[2].second,100,200);
-  CFramedWindow* pW4 = new CSensorGraph(ww4,v[3].first,v[3].second,100,200);
-  CFramedWindow* pW5 = new CSensorGraph(ww5,v[4].first,v[4].second,100,200);
-  CFramedWindow* pW6 = new CSensorGraph(ww6,v[5].first,v[5].second,100,200);
-  CFramedWindow* pW7 = new CSensorGraph(ww7,v[6].first,v[6].second,100,200);
-  CFramedWindow* pW8 = new CSensorGraph(ww8,v[7].first,v[7].second,100,200);
+  CFramedWindow* pW3 = new CSensorGraph(ww3,v[2].first,v[2].second,-100,200);
+  CFramedWindow* pW4 = new CSensorGraph(ww4,v[3].first,v[3].second,-100,200);
+  CFramedWindow* pW5 = new CSensorGraph(ww5,v[4].first,v[4].second,-100,200);
+  CFramedWindow* pW6 = new CSensorGraph(ww6,v[5].first,v[5].second,-100,200);
+  CFramedWindow* pW7 = new CSensorGraph(ww7,v[6].first,v[6].second,-100,200);
+  CFramedWindow* pW8 = new CSensorGraph(ww8,v[7].first,v[7].second,-100,200);
   //CFramedWindow* ppW3 = new CFramedWindow(CRect(CPoint(140, 200), CPoint(300, 300)), YELLOW, BLACK);
   
   CInputLine* ppW4 = new CInputLine(wpW4, BLACK,RED);
