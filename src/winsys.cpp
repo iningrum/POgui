@@ -100,7 +100,8 @@ bool CInputLine::handleEvent(int c)
   else if (c == SDLK_0)
   {
     //int code = parseCommand(text);
-    text = "\numbasa";
+    text = "\n\n\n   All logs have been cleared";
+    system(("python " + PO_UTILITIES+ " clear " + CSV_READING_FOLDER).c_str());
     return true;
   }
   if ((c > 255) || (c < 0))
@@ -257,7 +258,10 @@ void CDesktop::run()
         }
       }
       if (c == 'q')
+      {
+        system(("python "+PO_UTILITIES+" csv "+CSV_READING_FOLDER+" "+CSV_OUTPUT_PATH).c_str());
         break;
+      }
       updateNeeded = handleEvent(c);
     }
 

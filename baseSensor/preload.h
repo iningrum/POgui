@@ -49,6 +49,7 @@ const CSensor<TYPE> *MakeSensor(std::string line)
 }
 const CBase<TYPE> *LoadMachineState()
 { // return vector of sensors
+    class EmptyMachineStateCSV{};
     std::ifstream file("baseSensor/machineState.csv");
     std::vector<const CSensor<TYPE>*> result;
     std::string line;
@@ -57,6 +58,8 @@ const CBase<TYPE> *LoadMachineState()
         std::cout <<"aaa   " <<line << std::endl;
         result.push_back(MakeSensor(line));
     }
+    if (!result.size())
+        throw EmptyMachineStateCSV();
     for (int i =0; i<(result.size()+8)%8;i++)
         result.push_back(new CNonexistantSensor<TYPE>(0,0));
     return new CBase<TYPE>(result);
