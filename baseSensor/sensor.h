@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <chrono>
+#include <ctime>
 #include <cstdlib>
 #include "rand.h"
 #include "../config.h"
@@ -27,11 +29,13 @@ class CSensor
 private:
     T lowLimit;
     T highLimit;
-    std::ifstream MeasurmentsCsv;
     T makeMeasurement() const
     {
         return getRandomNumber(lowLimit, highLimit);
     }
+
+protected:
+    mutable std::string MeasurmentsCsv;
 
 public:
     int id = 0;
@@ -49,9 +53,16 @@ public:
         ID++;
     }
     CSensor() {}
-    T getMeasurement() const
+    T  virtual getMeasurement() const
     {
-        return makeMeasurement();
+        T val = makeMeasurement();
+        { // write value to file
+            std::ofstream file;
+            file.open(this->MeasurmentsCsv,std::fstream::app);
+            file << (to_string(val)+",");
+            file.close();
+        }
+        return val;
     }
     virtual ~CSensor() {}
     virtual void touch() const = 0;
@@ -62,10 +73,12 @@ template <class T>
 class CTemperatureSensor : public CSensor<T>
 {
 public:
-    CTemperatureSensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit)  { this->touch();}
+    CTemperatureSensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit) { this->touch(); }
     void touch() const
     {
-        system(("touch readings/temperatureSensor_" + to_string(this->id)).c_str());
+        std::string filename = "readings/temperatureSensor_" + to_string(this->id);
+        this->MeasurmentsCsv = filename;
+        system(("touch " + filename).c_str());
     }
     string getName() const
     {
@@ -80,10 +93,12 @@ template <class T>
 class CHumiditySensor : public CSensor<T>
 {
 public:
-    CHumiditySensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit)  { this->touch();}
+    CHumiditySensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit) { this->touch(); }
     void touch() const
     {
-        system(("touch readings/humiditySensor_" + to_string(this->id)).c_str());
+        std::string filename = "readings/himiditySensor_" + to_string(this->id);
+        this->MeasurmentsCsv = filename;
+        system(("touch " + filename).c_str());
     }
     string getName() const
     {
@@ -98,10 +113,12 @@ template <class T>
 class CWindSensor : public CSensor<T>
 {
 public:
-    CWindSensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit)  { this->touch();}
+    CWindSensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit) { this->touch(); }
     void touch() const
     {
-        system(("touch readings/windSensor_" + to_string(this->id)).c_str());
+        std::string filename = "readings/windSensor_" + to_string(this->id);
+        this->MeasurmentsCsv = filename;
+        system(("touch " + filename).c_str());
     }
     string getName() const
     {
@@ -116,10 +133,12 @@ template <class T>
 class CPressureSensor : public CSensor<T>
 {
 public:
-    CPressureSensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit) { this->touch();} 
+    CPressureSensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit) { this->touch(); }
     void touch() const
     {
-        system(("touch readings/pressureSensor_" + to_string(this->id)).c_str());
+        std::string filename = "readings/pressureSensor_" + to_string(this->id);
+        this->MeasurmentsCsv = filename;
+        system(("touch " + filename).c_str());
     }
     string getName() const
     {
@@ -134,10 +153,12 @@ template <class T>
 class CInsolationSensor : public CSensor<T>
 {
 public:
-    CInsolationSensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit)  { this->touch();}
+    CInsolationSensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit) { this->touch(); }
     void touch() const
     {
-        system(("touch readings/insolationSensor_" + to_string(this->id)).c_str());
+        std::string filename = "readings/insolationSensor_" + to_string(this->id);
+        this->MeasurmentsCsv = filename;
+        system(("touch " + filename).c_str());
     }
     string getName() const
     {
@@ -152,7 +173,7 @@ template <class T>
 class CNonexistantSensor : public CSensor<T>
 {
 public:
-    CNonexistantSensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit)  { this->touch();}
+    CNonexistantSensor(T lowLimit, T highLimit) : CSensor<T>(lowLimit, highLimit) { this->touch(); }
     void touch() const
     {
         // supposed to do nothing. This class is just a placeholder
@@ -164,6 +185,35 @@ public:
     string getUnit() const
     {
         return "j";
+    }
+};
+template <class T>
+class CTimeSensor : public CSensor<T>
+{
+    public:
+    CTimeSensor(){}
+    void getMeasurement()
+    {
+        auto time = std::chrono::system_clock::now();
+        std::time_t ftime =std::chrono::system_clock::to_time_t(time);
+        std::ofstream file;
+        file.open(this->MeasurmentsCsv,std::fstream::app);
+        file << std::ctime(&ftime)<<",";
+        file.close();
+    }
+    void touch() const
+    {
+        std::string filename = "readings/time_" + to_string(this->id);
+        this->MeasurmentsCsv = filename;
+        system(("touch " + filename).c_str());
+    }
+    string getName() const
+    {
+        return "";
+    }
+    string getUnit() const
+    {
+        return "";
     }
 };
 /*class iCSensor

@@ -9,6 +9,7 @@
 #include "parse.h"
 #include "../baseSensor/preload.h"
 #include "../config.h"
+
 using namespace std;
 
 //----------------------------------------------------------------------
@@ -208,11 +209,12 @@ void CDesktop::run()
   std::vector<const CSensor<TYPE> *>::const_iterator sensor_slice_a = sensors->Sensors.begin();
   std::vector<const CSensor<TYPE> *>::const_iterator sensor_slice_b = sensor_slice_a + 8;
   auto desktop_slice_a = this->children.begin();
+  CTimeSensor<TYPE> timestamp_Clock;
+  timestamp_Clock.touch();
   while (1)
   {
     bool updateNeeded = false;
     SDL_Event event = getEvent();
-
     if (event.type == SDL_QUIT)
       exit(3);
     else if (event.type == SDL_USEREVENT)
@@ -267,16 +269,24 @@ void CDesktop::run()
     if (time(0) == expected_time)
     {
       expected_time += frequency;
+      timestamp_Clock.getMeasurement();
       std::cout << sensors;
       int i = 0;
       auto desktop_it = desktop_slice_a;
       for (auto it = sensor_slice_a; it != sensor_slice_b; it++)
       {
-        (*it)->getMeasurement();
         //std::string name = (*it)->getName();
         (*desktop_it)->str = (*it)->getName();
         (*desktop_it)->push_back((*it)->getMeasurement());
         desktop_it++;
+      }
+      for (auto it = sensors->Sensors.begin(); it!=sensor_slice_a;it++)
+      {
+        (*it)->getMeasurement();
+      }
+      for (auto it = sensor_slice_b; it!=sensors->Sensors.end();it++)
+      {
+        (*it)->getMeasurement();
       }
     }
   }
