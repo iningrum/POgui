@@ -8,6 +8,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <cstdlib>
 const CSensor<TYPE> *MakeSensor(std::string line)
 {
     using str = std::string;
