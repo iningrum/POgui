@@ -1,4 +1,6 @@
 #!/bin/bash
 mkdir readings
 ./dimensions
-echo "\nInstallation complete\n ./gm to run"
+make
+echo "Installation complete"
+echo "./gm to run"
